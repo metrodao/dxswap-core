@@ -27,27 +27,27 @@ describe('DXswapFactory', () => {
 
   let factory: Contract
   let feeSetter: Contract
-  let honeyToken: Contract
   beforeEach(async () => {
     const fixture = await loadFixture(factoryFixture)
     factory = fixture.factory
     feeSetter = fixture.feeSetter
-    honeyToken = fixture.honeyToken
 
     // Set feeToSetter to wallet.address to test the factory methdos from an ETH account
-    await feeSetter.setFeeTo(AddressZero);
-    await feeSetter.setFeeToSetter(wallet.address);
+    await feeSetter.setFeeTo(AddressZero)
+    await feeSetter.setFeeToSetter(wallet.address)
   })
 
   it('feeTo, feeToSetter, allPairsLength, INIT_CODE_PAIR_HASH', async () => {
     expect(await factory.feeTo()).to.eq(AddressZero)
     expect(await factory.feeToSetter()).to.eq(wallet.address)
     expect(await factory.allPairsLength()).to.eq(0)
-    expect(await factory.INIT_CODE_PAIR_HASH()).to.eq('0xf23fac090dc304615f73576672d67b74204fd7c289024743f16fc2ff983711ca')
+    expect(await factory.INIT_CODE_PAIR_HASH()).to.eq(
+      '0xd306a548755b9295ee49cc729e13ca4a45e00199bbd890fa146da43a50571776'
+    )
   })
 
   async function createPair(tokens: [string, string]) {
-    const bytecode = "0x"+DXswapPair.bytecode
+    const bytecode = '0x' + DXswapPair.bytecode
     const create2Address = getCreate2Address(factory.address, tokens, bytecode)
     await expect(factory.createPair(...tokens))
       .to.emit(factory, 'PairCreated')
@@ -74,34 +74,10 @@ describe('DXswapFactory', () => {
     await createPair(TEST_ADDRESSES.slice().reverse() as [string, string])
   })
 
-  it('createPair:using half fee token', async () => {
-    const tokens: [string, string] = ['0x1000000000000000000000000000000000000000', honeyToken.address]
-    const bytecode = "0x"+DXswapPair.bytecode
-    const create2Address = getCreate2Address(factory.address, tokens, bytecode)
-    const pair = new Contract(create2Address, JSON.stringify(DXswapPair.abi), provider)
-
-    await expect(factory.createPair(...tokens))
-      .to.emit(factory, 'PairCreated')
-      .withArgs(tokens[0], tokens[1], create2Address, bigNumberify(1))
-    await expect(await pair.swapFee()).to.eq(15)
-  })
-
-  it('createPair:using half fee token reversed', async () => {
-    const tokens: [string, string] = [honeyToken.address, '0x1000000000000000000000000000000000000000']
-    const bytecode = "0x"+DXswapPair.bytecode
-    const create2Address = getCreate2Address(factory.address, tokens, bytecode)
-    const pair = new Contract(create2Address, JSON.stringify(DXswapPair.abi), provider)
-
-    await expect(factory.createPair(...tokens))
-      .to.emit(factory, 'PairCreated')
-      .withArgs(tokens[1], tokens[0], create2Address, bigNumberify(1))
-    await expect(await pair.swapFee()).to.eq(15)
-  })
-
   it('createPair:gas', async () => {
     const tx = await factory.createPair(...TEST_ADDRESSES)
     const receipt = await tx.wait()
-    expect(receipt.gasUsed).to.eq(2137812)
+    expect(receipt.gasUsed).to.eq(2136142)
   })
 
   it('setFeeTo', async () => {
