@@ -25,27 +25,27 @@ contract DXswapFeeReceiver {
         ethReceiver = _ethReceiver;
         fallbackReceiver = _fallbackReceiver;
     }
-    
+
     function() external payable {}
 
     function transferOwnership(address newOwner) external {
         require(msg.sender == owner, 'DXswapFeeReceiver: FORBIDDEN');
         owner = newOwner;
     }
-    
+
     function changeReceivers(address _ethReceiver, address _fallbackReceiver) external {
         require(msg.sender == owner, 'DXswapFeeReceiver: FORBIDDEN');
         ethReceiver = _ethReceiver;
         fallbackReceiver = _fallbackReceiver;
     }
-    
+
     // Returns sorted token addresses, used to handle return values from pairs sorted in this order
     function sortTokens(address tokenA, address tokenB) internal pure returns (address token0, address token1) {
         require(tokenA != tokenB, 'DXswapFeeReceiver: IDENTICAL_ADDRESSES');
         (token0, token1) = tokenA < tokenB ? (tokenA, tokenB) : (tokenB, tokenA);
         require(token0 != address(0), 'DXswapFeeReceiver: ZERO_ADDRESS');
     }
-    
+
     // Helper function to know if an address is a contract, extcodesize returns the size of the code of a smart
     //  contract in a specific address
     function isContract(address addr) internal returns (bool) {
@@ -59,19 +59,20 @@ contract DXswapFeeReceiver {
     function pairFor(address tokenA, address tokenB) internal view returns (address pair) {
         (address token0, address token1) = sortTokens(tokenA, tokenB);
         pair = address(uint(keccak256(abi.encodePacked(
-            hex'ff',
-            factory,
-            keccak256(abi.encodePacked(token0, token1)),
-            hex'd306a548755b9295ee49cc729e13ca4a45e00199bbd890fa146da43a50571776' // init code hash
-        ))));
+                hex'ff',
+                factory,
+                keccak256(abi.encodePacked(token0, token1)),
+                hex'5d5dfa98b23ace472a8581d664cd33b83c335db3009d1477c491e1cda864ad63' // matic init code hash
+//                hex'd306a548755b9295ee49cc729e13ca4a45e00199bbd890fa146da43a50571776' // init code hash original
+            ))));
     }
-    
+
     // Done with code form DXswapRouter and DXswapLibrary, removed the deadline argument
     function _swapTokensForETH(uint amountIn, address fromToken)
         internal
     {
         IDXswapPair pairToUse = IDXswapPair(pairFor(fromToken, WETH));
-        
+
         (uint reserve0, uint reserve1,) = pairToUse.getReserves();
         (uint reserveIn, uint reserveOut) = fromToken < WETH ? (reserve0, reserve1) : (reserve1, reserve0);
 
@@ -80,17 +81,17 @@ contract DXswapFeeReceiver {
         uint numerator = amountInWithFee.mul(reserveOut);
         uint denominator = reserveIn.mul(10000).add(amountInWithFee);
         uint amountOut = numerator / denominator;
-        
+
         TransferHelper.safeTransfer(
             fromToken, address(pairToUse), amountIn
         );
-        
+
         (uint amount0Out, uint amount1Out) = fromToken < WETH ? (uint(0), amountOut) : (amountOut, uint(0));
-        
+
         pairToUse.swap(
             amount0Out, amount1Out, address(this), new bytes(0)
         );
-        
+
         IWETH(WETH).withdraw(amountOut);
         TransferHelper.safeTransferETH(ethReceiver, amountOut);
     }
@@ -109,7 +110,7 @@ contract DXswapFeeReceiver {
         TransferHelper.safeTransfer(token, fallbackReceiver, amount);
       }
     }
-    
+
     // Take what was charged as protocol fee from the DXswap pair liquidity
     function takeProtocolFee(IDXswapPair[] calldata pairs) external {
         for (uint i = 0; i < pairs.length; i++) {
