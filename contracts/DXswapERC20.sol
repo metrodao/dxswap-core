@@ -6,8 +6,8 @@ import './libraries/SafeMath.sol';
 contract DXswapERC20 is IDXswapERC20 {
     using SafeMath for uint;
 
-    string public constant name = 'HoneySwap';
-    string public constant symbol = 'HNS';
+    string public constant name = 'MetroSwap';
+    string public constant symbol = 'MTS';
     uint8 public constant decimals = 18;
     uint  public totalSupply;
     mapping(address => uint) public balanceOf;
