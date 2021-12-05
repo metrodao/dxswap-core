@@ -2,6 +2,7 @@ const HDWalletProvider = require('@truffle/hdwallet-provider')
 require('dotenv').config();
 
 mnemonic = process.env.KEY_MNEMONIC;
+// kedia
 privateKey = process.env.ETH_KEY;
 infuraApiKey = process.env.KEY_INFURA_API_KEY;
 

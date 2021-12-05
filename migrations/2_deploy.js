@@ -4,7 +4,9 @@ const ERC20 = artifacts.require('ERC20.sol')
 
 const argValue = (arg, defaultValue) => process.argv.includes(arg) ? process.argv[process.argv.indexOf(arg) + 1] : defaultValue
 const network = () => argValue('--network', 'local')
-const HONEY_ON_MATIC = "0xb371248Dd0f9E4061ccf8850E9223Ca48Aa7CA4b"
+// kedia: edit next line
+// const HONEY_ON_MATIC = "0xb371248Dd0f9E4061ccf8850E9223Ca48Aa7CA4b"
+const METRO_ON_MATIC = "0xc9616280Cc74B3B2196D32325f5278a7c2B593C4"
 const WETH_ON_MATIC = "0x7ceB23fD6bC0adD59E62ac25578270cFf1b9f619"
 
 module.exports = async (deployer) => {
