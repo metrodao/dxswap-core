@@ -25,7 +25,7 @@
   },
   "xdai": {
     "deployer": "0x93889F441C03E6E8A662c9c60c750A9BfEcb00bd",
-    "factory": "0xA818b4F111Ccac7AA31D0BCc0806d64F2E0737D7",
+    "factory": "0x9EA3fBcF8173555e1eb7326B664BeaF1F5f86F01",
     "feeReceiver": "0x076b64f9f966e3bbd0fcdc79d490ab71cf961bb0",
     "feeSetter": "0xdf535d64707819b0d74486a8e4f2c45244f95edc"
   },
