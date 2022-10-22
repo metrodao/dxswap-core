@@ -17,6 +17,12 @@
     "feeReceiver": "0x8f72F61839182EEf7C250c760bc557dcF24A5568",
     "feeSetter": "0x8acD6755C2Da71d778C3b6793F6ad6faFE29a244"
   },
+  "etf": {
+    "deployer": "0xB7ac92b4c5f1A5A197c5026AE14CFeFb9B3dCDFf",
+    "factory": "0x089Ee1d2c690d0F42aA4B765B695B2Ce00a4D474",
+    "feeReceiver": "0x8f72F61839182EEf7C250c760bc557dcF24A5568",
+    "feeSetter": "0x8acD6755C2Da71d778C3b6793F6ad6faFE29a244"
+  },
   "arbitrumTestnetV3": {
     "deployer": "0x4a6569148e34B2a4CBE5b4C232114b89Aa576717",
     "factory": "0x2Fc759A22aFd8025940617Baf609F8C2a696315c",
